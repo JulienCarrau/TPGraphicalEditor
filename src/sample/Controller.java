@@ -49,7 +49,7 @@ public class Controller implements Initializable {
     private void initPaneListeners() {
         drawing.setOnMousePressed(mouseEvent -> {
             if (!model.getMove()) // If we are on drawing option
-                switch (model.getCurrentShape()) {
+                switch (model.getCurrentDrawingShape()) {
                     case "ellipse":
                         Ellipse e = new Ellipse(mouseEvent.getX(), mouseEvent.getY(), 1, 1);
                         e.setStroke(model.getCurrentColor());
@@ -77,7 +77,7 @@ public class Controller implements Initializable {
         drawing.setOnMouseDragged(mouseEvent -> {
             if (!model.getMove()) { // If we are on drawing option
                 drawing.getChildren().remove(model.getLastShape());
-                switch (model.getCurrentShape()) {
+                switch (model.getCurrentDrawingShape()) {
                     case "ellipse":
                         Ellipse e = (Ellipse) model.getLastShape();
                         model.updateShape(e, Math.abs(e.getCenterX() - mouseEvent.getX()), Math.abs(e.getCenterY() - mouseEvent.getY()));
@@ -98,20 +98,21 @@ public class Controller implements Initializable {
     private void initColorPickerListener() {
         colorPicker.valueProperty().addListener((observableValue, color, t1) -> {
             model.setCurrentColor(t1);
+            if (model.getMove()) model.changeColorOfAllSelectedShapes();
         });
     }
 
     private void initRadioShapesListeners() {
         ellipseRadio.setOnAction(actionEvent -> {
-            model.setCurrentShape("ellipse");
+            model.setCurrentDrawingShape("ellipse");
         });
 
         rectangleRadio.setOnAction(actionEvent -> {
-            model.setCurrentShape("rectangle");
+            model.setCurrentDrawingShape("rectangle");
         });
 
         lineRadio.setOnAction(actionEvent -> {
-            model.setCurrentShape("line");
+            model.setCurrentDrawingShape("line");
         });
     }
 

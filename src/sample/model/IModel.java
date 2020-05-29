@@ -6,8 +6,8 @@ import javafx.scene.shape.Shape;
 public interface IModel {
     void setCurrentColor(Color c);
     Color getCurrentColor();
-    void setCurrentShape(String s);
-    String getCurrentShape();
+    void setCurrentDrawingShape(String s);
+    String getCurrentDrawingShape();
 
     void addShape(Shape s);
     void updateShape(Shape s, double endX, double endY);
@@ -15,4 +15,6 @@ public interface IModel {
 
     void setMove(boolean b);
     boolean getMove();
+
+    void changeColorOfAllSelectedShapes();
 }

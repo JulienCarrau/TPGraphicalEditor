@@ -1,21 +1,25 @@
 package sample.model;
 
+import javafx.animation.ScaleTransition;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 
 public class Model implements IModel {
     private ArrayList<Shape> shapes;
-    private String currentSelectedShape;
+    private ArrayList<Shape> selectedShapes;
+    private String currentDrawingShape;
     private Color currentColor;
     private boolean moveOption; // if true, we only move shapes, else we can draw new ones
 
     public Model() {
         shapes = new ArrayList<>();
+        selectedShapes = new ArrayList<>();
         moveOption = false;
     }
 
@@ -30,13 +34,13 @@ public class Model implements IModel {
     }
 
     @Override
-    public void setCurrentShape(String s) {
-        currentSelectedShape = s;
+    public void setCurrentDrawingShape(String s) {
+        currentDrawingShape = s;
     }
 
     @Override
-    public String getCurrentShape() {
-        return currentSelectedShape;
+    public String getCurrentDrawingShape() {
+        return currentDrawingShape;
     }
 
     @Override
@@ -44,18 +48,40 @@ public class Model implements IModel {
         shapes.add(s);
         s.setOnMouseClicked(mouseEvent -> {
             if (moveOption) {
-                s.setStroke(Color.RED);
+                if (!selectedShapes.contains(s)) selectShape(s);
+                else unSelectShape(s);
             }
         });
     }
 
-    private void makeBigger(Shape s) {
+    private void selectShape(Shape s) {
+        s.setStroke(Color.LIGHTGREEN);
 
+        selectedShapes.add(s);
+
+        ScaleTransition selectAnimation = new ScaleTransition(Duration.seconds(0.1), s);
+        selectAnimation.setAutoReverse(true);
+        selectAnimation.setCycleCount(2);
+        selectAnimation.setToX(1.1);
+        selectAnimation.setToY(1.1);
+        selectAnimation.play();
+    }
+
+    private void unSelectShape(Shape s) {
+        s.setStroke(getCurrentColor());
+        selectedShapes.remove(s);
+
+        ScaleTransition unSelectAnimation = new ScaleTransition(Duration.seconds(0.1), s);
+        unSelectAnimation.setAutoReverse(true);
+        unSelectAnimation.setCycleCount(2);
+        unSelectAnimation.setToX(0.9);
+        unSelectAnimation.setToY(0.9);
+        unSelectAnimation.play();
     }
 
     @Override
     public void updateShape(Shape s, double endX, double endY) {
-        switch (currentSelectedShape) {
+        switch (currentDrawingShape) {
             case "ellipse":
                 ((Ellipse) s).setRadiusX(endX);
                 ((Ellipse) s).setRadiusY(endY);
@@ -86,5 +112,12 @@ public class Model implements IModel {
     @Override
     public boolean getMove() {
         return moveOption;
+    }
+
+    @Override
+    public void changeColorOfAllSelectedShapes() {
+        for (Shape s : selectedShapes) {
+            s.setFill(getCurrentColor());
+        }
     }
 }
