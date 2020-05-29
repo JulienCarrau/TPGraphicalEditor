@@ -68,7 +68,7 @@ public class Model implements IModel {
     }
 
     private void unSelectShape(Shape s) {
-        s.setStroke(getCurrentColor());
+        s.setStroke(s.getFill());
         selectedShapes.remove(s);
 
         ScaleTransition unSelectAnimation = new ScaleTransition(Duration.seconds(0.1), s);
@@ -97,6 +97,11 @@ public class Model implements IModel {
                 ((Line) s).setEndY(endY);
                 break;
         }
+    }
+
+    @Override
+    public ArrayList<Shape> getAllSelectedShapes() {
+        return selectedShapes;
     }
 
     @Override
@@ -132,6 +137,22 @@ public class Model implements IModel {
                 ((Ellipse) s).setCenterX(((Ellipse) s).getCenterX() + dx);
                 ((Ellipse) s).setCenterY(((Ellipse) s).getCenterY() + dy);
             }
+            else if (s instanceof Rectangle) {
+                ((Rectangle) s).setX(((Rectangle) s).getX() + dx);
+                ((Rectangle) s).setY(((Rectangle) s).getY() + dy);
+            }
+            else {
+                ((Line) s).setStartX(((Line) s).getStartX() + dx);
+                ((Line) s).setEndX(((Line) s).getEndX() + dx);
+                ((Line) s).setStartY(((Line) s).getStartY() + dy);
+                ((Line) s).setEndY(((Line) s).getEndY() + dy);
+            }
         }
+    }
+
+    @Override
+    public void deleteAllSelectedShapes() {
+        shapes.removeAll(selectedShapes);
+        selectedShapes.clear();
     }
 }

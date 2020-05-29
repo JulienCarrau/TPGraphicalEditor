@@ -11,6 +11,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 import sample.model.Model;
 
 import java.net.URL;
@@ -43,9 +44,12 @@ public class Controller implements Initializable {
         initColorPickerListener();
         initRadioShapesListeners();
         initSelectMoveListener();
+        initButtonsListeners();
 
         colorPicker.setValue(Color.BLACK);
         ellipseRadio.fire(); // Select ellipse per default
+        deleteButton.setDisable(true); // By default nothing is selected so this button is disabled
+        cloneButton.setDisable(true); // By default nothing is selected so this button is disabled
     }
 
     private void initPaneListeners() {
@@ -114,22 +118,57 @@ public class Controller implements Initializable {
     }
 
     private void initRadioShapesListeners() {
-        ellipseRadio.setOnAction(actionEvent -> {
-            model.setCurrentDrawingShape("ellipse");
-        });
+        ellipseRadio.setOnAction(actionEvent -> model.setCurrentDrawingShape("ellipse"));
 
-        rectangleRadio.setOnAction(actionEvent -> {
-            model.setCurrentDrawingShape("rectangle");
-        });
+        rectangleRadio.setOnAction(actionEvent -> model.setCurrentDrawingShape("rectangle"));
 
-        lineRadio.setOnAction(actionEvent -> {
-            model.setCurrentDrawingShape("line");
-        });
+        lineRadio.setOnAction(actionEvent -> model.setCurrentDrawingShape("line"));
     }
 
     private void initSelectMoveListener() {
         selectMoveRadio.setOnAction(actionEvent -> {
             model.setMove(!model.getMove()); // Switch to move or draw
+            if (model.getMove()) {
+                deleteButton.setDisable(false);
+                cloneButton.setDisable(false);
+            } else {
+                deleteButton.setDisable(true);
+                cloneButton.setDisable(true);
+            }
+        });
+    }
+
+    private void initButtonsListeners() {
+        deleteButton.setOnAction(actionEvent -> {
+            drawing.getChildren().removeAll(model.getAllSelectedShapes());
+            model.deleteAllSelectedShapes();
+        });
+
+        cloneButton.setOnAction(actionEvent -> {
+            for (Shape s : model.getAllSelectedShapes()) {
+                if (s instanceof Ellipse) {
+                    Ellipse e = new Ellipse(((Ellipse) s).getCenterX(), ((Ellipse) s).getCenterY(), ((Ellipse) s).getRadiusX(), ((Ellipse) s).getRadiusY());
+                    e.setStroke(s.getFill());
+                    e.setFill(s.getFill()); // did it on purpose, cloned objects are not selected
+                    model.addShape(e);
+                    drawing.getChildren().add(e);
+                }
+                else if (s instanceof Rectangle) {
+                    Rectangle r = new Rectangle(((Rectangle) s).getX(), ((Rectangle) s).getY(), ((Rectangle) s).getWidth(), ((Rectangle) s).getHeight());
+                    r.setStroke(s.getFill());
+                    r.setFill(s.getFill()); // did it on purpose, cloned objects are not selected
+                    drawing.getChildren().add(r);
+                    model.addShape(r);
+                }
+                else {
+                    Line l = new Line(((Line) s).getStartX(), ((Line) s).getStartY(), ((Line) s).getEndX(), ((Line) s).getEndY());
+                    l.setStroke(s.getFill());
+                    l.setFill(s.getFill()); // did it on purpose, cloned objects are not selected
+                    drawing.getChildren().add(l);
+                    model.addShape(l);
+                }
+            }
+            model.moveAllSelectedShapes(5, 5);
         });
     }
 }

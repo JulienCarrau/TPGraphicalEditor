@@ -3,6 +3,8 @@ package sample.model;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Shape;
 
+import java.util.ArrayList;
+
 public interface IModel {
     void setCurrentColor(Color c);
     Color getCurrentColor();
@@ -11,6 +13,7 @@ public interface IModel {
 
     void addShape(Shape s);
     void updateShape(Shape s, double endX, double endY);
+    ArrayList<Shape> getAllSelectedShapes();
     Shape getLastShape();
 
     void setMove(boolean b);
@@ -18,4 +21,5 @@ public interface IModel {
 
     void changeColorOfAllSelectedShapes();
     void moveAllSelectedShapes(double x, double y);
+    void deleteAllSelectedShapes();
 }
