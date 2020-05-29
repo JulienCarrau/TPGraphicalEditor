@@ -80,7 +80,7 @@ public class Model implements IModel {
     }
 
     @Override
-    public void updateShape(Shape s, double endX, double endY) {
+    public void changerSizeOfShapeInCreation(Shape s, double endX, double endY) {
         switch (currentDrawingShape) {
             case "ellipse":
                 ((Ellipse) s).setRadiusX(endX);
