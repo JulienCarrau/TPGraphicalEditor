@@ -1,11 +1,15 @@
 package sample;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
@@ -45,6 +49,14 @@ public class Controller implements Initializable {
         initRadioShapesListeners();
         initSelectMoveListener();
         initButtonsListeners();
+
+        /*Rectangle clip = new Rectangle(drawing.getWidth(), drawing.getHeight());
+        //clip.setLayoutX(drawing.getLayoutX());
+        //clip.setLayoutY(drawing.getLayoutY());
+        clip.setFill(Color.RED);
+        clip.setStrokeWidth(20);
+        clip.setStroke(Color.RED);
+        drawing.setClip(clip);*/
 
         colorPicker.setValue(Color.BLACK);
         ellipseRadio.fire(); // Select ellipse per default
