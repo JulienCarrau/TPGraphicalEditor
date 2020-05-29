@@ -33,6 +33,8 @@ public class Controller implements Initializable {
     @FXML
     private ToggleGroup group; // unused
 
+    private double xMouseMemory, yMouseMemory;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         model = new Model();
@@ -72,6 +74,10 @@ public class Controller implements Initializable {
                         model.addShape(l);
                         break;
                 }
+            else { // To move shapes together we need to save old mouse positions
+                xMouseMemory = mouseEvent.getX();
+                yMouseMemory = mouseEvent.getY();
+            }
         });
 
         drawing.setOnMouseDragged(mouseEvent -> {
@@ -91,6 +97,11 @@ public class Controller implements Initializable {
                         break;
                 }
                 drawing.getChildren().add(model.getLastShape());
+            }
+            else { // If we are on moving option
+                model.moveAllSelectedShapes(mouseEvent.getX() - xMouseMemory, mouseEvent.getY() - yMouseMemory);
+                xMouseMemory = mouseEvent.getX();
+                yMouseMemory = mouseEvent.getY();
             }
         });
     }

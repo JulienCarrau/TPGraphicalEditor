@@ -107,6 +107,10 @@ public class Model implements IModel {
     @Override
     public void setMove(boolean b) {
         moveOption = b;
+        if (!moveOption) {
+            for (Shape s : selectedShapes) s.setStroke(getCurrentColor());
+            selectedShapes.clear();
+        }
     }
 
     @Override
@@ -118,6 +122,16 @@ public class Model implements IModel {
     public void changeColorOfAllSelectedShapes() {
         for (Shape s : selectedShapes) {
             s.setFill(getCurrentColor());
+        }
+    }
+
+    @Override
+    public void moveAllSelectedShapes(double dx, double dy) {
+        for (Shape s : selectedShapes) {
+            if (s instanceof Ellipse) {
+                ((Ellipse) s).setCenterX(((Ellipse) s).getCenterX() + dx);
+                ((Ellipse) s).setCenterY(((Ellipse) s).getCenterY() + dy);
+            }
         }
     }
 }

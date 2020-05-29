@@ -17,4 +17,5 @@ public interface IModel {
     boolean getMove();
 
     void changeColorOfAllSelectedShapes();
+    void moveAllSelectedShapes(double x, double y);
 }
