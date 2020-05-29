@@ -18,19 +18,19 @@ import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
     @FXML
-    private Pane drawing;
+    private Pane drawing; // Where we draw
     private Model model; // Will contain shapes
 
     @FXML
-    private RadioButton selectMoveRadio, ellipseRadio, rectangleRadio, lineRadio;
+    private RadioButton selectMoveRadio, ellipseRadio, rectangleRadio, lineRadio; // All radio buttons
 
     @FXML
     private ColorPicker colorPicker;
 
     @FXML
-    private Button deleteButton, cloneButton, undoButton, redoButton;
+    private Button deleteButton, cloneButton;
 
-    private double xMouseMemory, yMouseMemory;
+    private double xMouseMemory, yMouseMemory; // Used to translate a stack of shapes
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -41,11 +41,9 @@ public class Controller implements Initializable {
         initRadioShapesListeners();
         initSelectMoveListener();
         initButtonsListeners();
-        initUndoRedoListeners();
 
-        Rectangle r = new Rectangle(0, 0, 420, 400);
-        r.setFill(Color.RED);
-        drawing.setClip(r);
+        Rectangle clip = new Rectangle(0, 0, 420, 400); // Cliping so drawings don't go outside of pane
+        drawing.setClip(clip);
 
         colorPicker.setValue(Color.BLACK);
         ellipseRadio.fire(); // Select ellipse per default
@@ -56,13 +54,12 @@ public class Controller implements Initializable {
     /**
      * This method initializes listeners over the drawing pane. There is:
      * - A mouse pressed listener which is used for:
-     *      1) If the model is on drawing mode: Create a new shape and draw the "first version" of it.
+     *      1) If the model is on drawing mod: Create a new shape and draw the "first version" of it.
      *      2) Else save first positions of mouse click in order to track translation.
      *
      * - A mouse dragged listener which is used for:
-     *      1) If the model is on drawing mode: Update the shape's size while drawing it.
-     *      2)
-     *
+     *      1) If the model is on drawing mod: Update the shape's size while drawing it.
+     *      2) Else move all selected shapes and keep track of movement while mouse is dragged.
      */
     private void initPaneListeners() {
         drawing.setOnMousePressed(mouseEvent -> {
@@ -91,7 +88,6 @@ public class Controller implements Initializable {
                         break;
                 }
             else { // To move shapes together we need to save old mouse positions
-                model.initMove();
                 xMouseMemory = mouseEvent.getX();
                 yMouseMemory = mouseEvent.getY();
             }
@@ -123,6 +119,9 @@ public class Controller implements Initializable {
         });
     }
 
+    /**
+     * Listener to color picker to update model and if model is on selection mod, change color of selected shapes.
+     */
     private void initColorPickerListener() {
         colorPicker.valueProperty().addListener((observableValue, color, t1) -> {
             model.setCurrentColor(t1);
@@ -130,6 +129,9 @@ public class Controller implements Initializable {
         });
     }
 
+    /**
+     * Add listeners to radio buttons, according to the selected button, it updates the model so it knows which shape to create.
+     */
     private void initRadioShapesListeners() {
         ellipseRadio.setOnAction(actionEvent -> model.setCurrentDrawingShape("ellipse"));
 
@@ -138,6 +140,9 @@ public class Controller implements Initializable {
         lineRadio.setOnAction(actionEvent -> model.setCurrentDrawingShape("line"));
     }
 
+    /**
+     * Listen move / select button, update model and disable or able delete and clone buttons.
+     */
     private void initSelectMoveListener() {
         selectMoveRadio.setOnAction(actionEvent -> {
             model.setSelectingMovingOption(!model.getSelectingMovingOption()); // Switch to move or draw
@@ -151,6 +156,10 @@ public class Controller implements Initializable {
         });
     }
 
+    /**
+     * Delete button is listened so when fired it deletes all selected (in the model) shapes.
+     * Clone button, when fired, clone one by one each selected shape with a small offset.
+     */
     private void initButtonsListeners() {
         deleteButton.setOnAction(actionEvent -> {
             drawing.getChildren().removeAll(model.getAllSelectedShapes());
@@ -183,11 +192,5 @@ public class Controller implements Initializable {
             }
             model.moveAllSelectedShapes(5, 5);
         });
-    }
-
-    private void initUndoRedoListeners() {
-        undoButton.setOnAction(actionEvent -> model.getMove().undo());
-
-        redoButton.setOnAction(actionEvent -> model.getMove().redo());
     }
 }

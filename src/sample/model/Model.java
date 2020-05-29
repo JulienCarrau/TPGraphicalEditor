@@ -7,7 +7,6 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.util.Duration;
-import sample.model.commands.Move;
 
 import java.util.ArrayList;
 
@@ -17,34 +16,57 @@ public class Model implements IModel {
     private String currentDrawingShape;
     private Color currentColor;
     private boolean moveOption; // if true, we only move shapes, else we can draw new ones
-    private Move move;
 
+    /**
+     * Model constructor.
+     */
     public Model() {
         shapes = new ArrayList<>();
         selectedShapes = new ArrayList<>();
         moveOption = false;
     }
 
+    /**
+     * Set model's color.
+     * @param c New model's color.
+     */
     @Override
     public void setCurrentColor(Color c) {
         currentColor = c;
     }
 
+    /**
+     * Get model's color.
+     * @return Model's color.
+     */
     @Override
     public Color getCurrentColor() {
         return currentColor;
     }
 
+    /**
+     * Set model's current drawing shape, so it knows which shape to draw when user click on the drawing space.
+     * @param s New Model's shape, can be : line, ellipse or rectangle.
+     */
     @Override
     public void setCurrentDrawingShape(String s) {
         currentDrawingShape = s;
     }
 
+    /**
+     * Get model's current drawing shape.
+     * @return Model's current drawing shape.
+     */
     @Override
     public String getCurrentDrawingShape() {
         return currentDrawingShape;
     }
 
+    /**
+     * Add a new shape in the model.
+     * A listener is added to know when this shape is selected or unselected.
+     * @param s Shape to add to the model.
+     */
     @Override
     public void addShape(Shape s) {
         shapes.add(s);
@@ -56,6 +78,10 @@ public class Model implements IModel {
         });
     }
 
+    /**
+     * Change shape's stroke and do a little animation to notify the user that this shape has been selected.
+     * @param s Selected shape.
+     */
     private void selectShape(Shape s) {
         s.setStroke(Color.LIGHTGREEN);
 
@@ -69,6 +95,10 @@ public class Model implements IModel {
         selectAnimation.play();
     }
 
+    /**
+     * Set shape's stroke like its filling and do a little animation to notify the user that this shape has been unselected.
+     * @param s Unselected shape.
+     */
     private void unSelectShape(Shape s) {
         s.setStroke(s.getFill());
         selectedShapes.remove(s);
@@ -81,6 +111,12 @@ public class Model implements IModel {
         unSelectAnimation.play();
     }
 
+    /**
+     * When user is drawing a new shape, while he's dragging on the drawing zone, we keep updating the preview.
+     * @param s Shape to draw.
+     * @param endX Last X position of the mouse.
+     * @param endY Last Y position of the mouse.
+     */
     @Override
     public void changeSizeOfShapeInCreation(Shape s, double endX, double endY) {
         switch (currentDrawingShape) {
@@ -101,16 +137,28 @@ public class Model implements IModel {
         }
     }
 
+    /**
+     * Get all selected shapes.
+     * @return An array containing selected shapes.
+     */
     @Override
     public ArrayList<Shape> getAllSelectedShapes() {
         return selectedShapes;
     }
 
+    /**
+     * Get last created shape (often use while creating it)
+     * @return Latest shape.
+     */
     @Override
     public Shape getLastShape() {
         return shapes.get(shapes.size() - 1);
     }
 
+    /**
+     * The model can be in drawing or selecting / moving mod, here we set which mod the model is in.
+     * @param b True -> model in selection mode, false -> model in drawing mode.
+     */
     @Override
     public void setSelectingMovingOption(boolean b) {
         moveOption = b;
@@ -120,11 +168,18 @@ public class Model implements IModel {
         }
     }
 
+    /**
+     * Get in which mod the model is in.
+     * @return Moving mod (true or false).
+     */
     @Override
     public boolean getSelectingMovingOption() {
         return moveOption;
     }
 
+    /**
+     * Change color filling of all selected shapes, not stroke because they are selected so they have a specific stroke.
+     */
     @Override
     public void changeColorOfAllSelectedShapes() {
         for (Shape s : selectedShapes) {
@@ -132,16 +187,34 @@ public class Model implements IModel {
         }
     }
 
+    /**
+     * Translate selected shapes by a delta x or delta y.
+     * @param dx Delta x.
+     * @param dy Delta y.
+     */
     @Override
     public void moveAllSelectedShapes(double dx, double dy) {
-        move.setTranslation(dx, dy);
-        move.execute();
+        for (Shape s : selectedShapes) {
+            if (s instanceof Ellipse) {
+                ((Ellipse) s).setCenterX(((Ellipse) s).getCenterX() + dx);
+                ((Ellipse) s).setCenterY(((Ellipse) s).getCenterY() + dy);
+            }
+            else if (s instanceof Rectangle) {
+                ((Rectangle) s).setX(((Rectangle) s).getX() + dx);
+                ((Rectangle) s).setY(((Rectangle) s).getY() + dy);
+            }
+            else {
+                ((Line) s).setStartX(((Line) s).getStartX() + dx);
+                ((Line) s).setEndX(((Line) s).getEndX() + dx);
+                ((Line) s).setStartY(((Line) s).getStartY() + dy);
+                ((Line) s).setEndY(((Line) s).getEndY() + dy);
+            }
+        }
     }
 
-    public void initMove() { move = new Move(0, 0, selectedShapes); }
-
-    public Move getMove() { return move; }
-
+    /**
+     * Delete all selected shapes (when delete button is pressed).
+     */
     @Override
     public void deleteAllSelectedShapes() {
         shapes.removeAll(selectedShapes);
