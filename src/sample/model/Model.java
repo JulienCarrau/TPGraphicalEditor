@@ -7,6 +7,7 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.util.Duration;
+import sample.model.commands.Move;
 
 import java.util.ArrayList;
 
@@ -132,7 +133,7 @@ public class Model implements IModel {
 
     @Override
     public void moveAllSelectedShapes(double dx, double dy) {
-        for (Shape s : selectedShapes) {
+        /*for (Shape s : selectedShapes) {
             if (s instanceof Ellipse) {
                 ((Ellipse) s).setCenterX(((Ellipse) s).getCenterX() + dx);
                 ((Ellipse) s).setCenterY(((Ellipse) s).getCenterY() + dy);
@@ -147,7 +148,9 @@ public class Model implements IModel {
                 ((Line) s).setStartY(((Line) s).getStartY() + dy);
                 ((Line) s).setEndY(((Line) s).getEndY() + dy);
             }
-        }
+        }*/
+        Move m = new Move(dx, dy, selectedShapes);
+        m.execute();
     }
 
     @Override
