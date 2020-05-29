@@ -16,12 +16,6 @@ public class Main extends Application {
         primaryStage.setTitle("Graphical editor");
         primaryStage.setScene(new Scene(root, 600, 400));
         primaryStage.show();
-
-        primaryStage.addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
-            System.out.println(keyEvent);
-            if (keyEvent.getText().equals("z") && keyEvent.isShortcutDown())
-                Controller.manageCtrlZ();
-        });
     }
 
     public static void main(String[] args) {

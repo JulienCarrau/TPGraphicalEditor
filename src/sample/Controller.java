@@ -167,8 +167,4 @@ public class Controller implements Initializable {
             model.moveAllSelectedShapes(5, 5);
         });
     }
-
-    protected static void manageCtrlZ() {
-
-    }
 }
