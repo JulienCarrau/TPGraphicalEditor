@@ -42,6 +42,10 @@ public class Controller implements Initializable {
         initSelectMoveListener();
         initButtonsListeners();
 
+        Rectangle r = new Rectangle(0, 0, 420, 400);
+        r.setFill(Color.RED);
+        drawing.setClip(r);
+
         colorPicker.setValue(Color.BLACK);
         ellipseRadio.fire(); // Select ellipse per default
         deleteButton.setDisable(true); // By default nothing is selected so this button is disabled
