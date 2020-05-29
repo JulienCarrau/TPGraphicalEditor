@@ -28,7 +28,7 @@ public class Controller implements Initializable {
     private ColorPicker colorPicker;
 
     @FXML
-    private Button deleteButton, cloneButton;
+    private Button deleteButton, cloneButton, undoButton, redoButton;
 
     private double xMouseMemory, yMouseMemory; // Used to translate a stack of shapes
 
@@ -41,6 +41,7 @@ public class Controller implements Initializable {
         initRadioShapesListeners();
         initSelectMoveListener();
         initButtonsListeners();
+        initUndoRedoListeners();
 
         Rectangle clip = new Rectangle(0, 0, 420, 400); // Cliping so drawings don't go outside of pane
         drawing.setClip(clip);
@@ -88,6 +89,7 @@ public class Controller implements Initializable {
                         break;
                 }
             else { // To move shapes together we need to save old mouse positions
+                model.initMove();
                 xMouseMemory = mouseEvent.getX();
                 yMouseMemory = mouseEvent.getY();
             }
@@ -192,5 +194,14 @@ public class Controller implements Initializable {
             }
             model.moveAllSelectedShapes(5, 5);
         });
+    }
+
+    /**
+     * Add listeners to undo and redo. The only thing we can (un/re)do is translate.
+     */
+    private void initUndoRedoListeners() {
+        undoButton.setOnAction(actionEvent -> model.getMove().undo());
+
+        redoButton.setOnAction(actionEvent -> model.getMove().redo());
     }
 }

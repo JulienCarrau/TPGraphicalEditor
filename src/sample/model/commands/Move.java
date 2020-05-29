@@ -8,12 +8,17 @@ import javafx.scene.shape.Shape;
 import java.util.ArrayList;
 
 public class Move implements ICommand {
-
     private double dx, dy;
     private double totalX, totalY;
     private ArrayList<Shape> shapes;
     private int undoCount;
 
+    /**
+     * Class contructor.
+     * @param dx First delta x positition.
+     * @param dy First delta y positition.
+     * @param s List of shapes linked to this movement.
+     */
     public Move(double dx, double dy, ArrayList<Shape> s) {
         this.dx = dx;
         totalX = dx;
@@ -23,6 +28,11 @@ public class Move implements ICommand {
         undoCount = 0;
     }
 
+    /**
+     * Update translation, and keep a track of the movement since its begining.
+     * @param dx New delta x movement.
+     * @param dy New delta y movement.
+     */
     public void setTranslation(double dx, double dy) {
         this.dx = dx;
         this.dy = dy;
@@ -30,6 +40,9 @@ public class Move implements ICommand {
         totalY += dy;
     }
 
+    /**
+     * Execute translation by small tests.
+     */
     @Override
     public void execute() {
         for (Shape s : shapes) {
@@ -50,6 +63,10 @@ public class Move implements ICommand {
         }
     }
 
+    /**
+     * Undo all movement in a single translation.
+     * Undo only if we never undid before (we can only undo once).
+     */
     @Override
     public void undo() {
         if (undoCount == 0) {
@@ -71,6 +88,10 @@ public class Move implements ICommand {
         }
     }
 
+    /**
+     * Redo all movement in a single translation.
+     * Redo only one time if we already undid.
+     */
     @Override
     public void redo() {
         if (undoCount > 0) {
