@@ -16,7 +16,7 @@ public interface IModel {
     ArrayList<Shape> getAllSelectedShapes();
     Shape getLastShape();
 
-    void setMove(boolean b);
+    void setSelectingMovingOption(boolean b);
     boolean getMove();
 
     void changeColorOfAllSelectedShapes();

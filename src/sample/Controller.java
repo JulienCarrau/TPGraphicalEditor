@@ -123,7 +123,7 @@ public class Controller implements Initializable {
 
     private void initSelectMoveListener() {
         selectMoveRadio.setOnAction(actionEvent -> {
-            model.setMove(!model.getMove()); // Switch to move or draw
+            model.setSelectingMovingOption(!model.getMove()); // Switch to move or draw
             if (model.getMove()) {
                 deleteButton.setDisable(false);
                 cloneButton.setDisable(false);

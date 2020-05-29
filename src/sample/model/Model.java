@@ -110,7 +110,7 @@ public class Model implements IModel {
     }
 
     @Override
-    public void setMove(boolean b) {
+    public void setSelectingMovingOption(boolean b) {
         moveOption = b;
         if (!moveOption) {
             for (Shape s : selectedShapes) s.setStroke(getCurrentColor());
