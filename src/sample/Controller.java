@@ -35,9 +35,6 @@ public class Controller implements Initializable {
     @FXML
     private Button deleteButton, cloneButton;
 
-    @FXML
-    private ToggleGroup group; // unused
-
     private double xMouseMemory, yMouseMemory;
 
     @Override
