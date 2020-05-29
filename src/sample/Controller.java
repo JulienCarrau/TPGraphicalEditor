@@ -2,6 +2,7 @@ package sample;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -39,7 +40,6 @@ public class Controller implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        ellipseRadio.fire(); // Select ellipse per default
         cg = drawing.getGraphicsContext2D(); // Initialize graphic context
         cg.setLineWidth(3); // Set line width
 
@@ -47,8 +47,10 @@ public class Controller implements Initializable {
 
         initCanvasListeners();
         initColorPickerListener();
+        initRadioShapesListeners();
 
         colorPicker.setValue(Color.BLACK);
+        ellipseRadio.fire(); // Select ellipse per default
     }
 
     private void initCanvasListeners() {
@@ -58,10 +60,36 @@ public class Controller implements Initializable {
             cg.setStroke(model.getCurrentColor());
         });
 
-        drawing.setOnMouseReleased(mouseEvent -> cg.strokeLine(mouseStartX, mouseStartY, mouseEvent.getX(), mouseEvent.getY()));
+        drawing.setOnMouseReleased(mouseEvent -> {
+            switch (model.getCurrentShape()) {
+                case "ellipse":
+
+                    break;
+                case "rectangle":
+
+                    break;
+                case "line":
+                    cg.strokeLine(mouseStartX, mouseStartY, mouseEvent.getX(), mouseEvent.getY());
+                    break;
+            }
+        });
     }
 
     private void initColorPickerListener() {
         colorPicker.valueProperty().addListener((observableValue, color, t1) -> model.setCurrentColor(t1));
+    }
+
+    private void initRadioShapesListeners() {
+        ellipseRadio.setOnAction(actionEvent -> {
+            model.setCurrentShape("ellipse");
+        });
+
+        rectangleRadio.setOnAction(actionEvent -> {
+            model.setCurrentShape("rectangle");
+        });
+
+        lineRadio.setOnAction(actionEvent -> {
+            model.setCurrentShape("line");
+        });
     }
 }
