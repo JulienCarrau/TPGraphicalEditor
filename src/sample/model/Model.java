@@ -17,11 +17,13 @@ public class Model implements IModel {
     private String currentDrawingShape;
     private Color currentColor;
     private boolean moveOption; // if true, we only move shapes, else we can draw new ones
+    private Move m;
 
     public Model() {
         shapes = new ArrayList<>();
         selectedShapes = new ArrayList<>();
         moveOption = false;
+        m = new Move(0, 0, selectedShapes);
     }
 
     @Override
@@ -149,9 +151,11 @@ public class Model implements IModel {
                 ((Line) s).setEndY(((Line) s).getEndY() + dy);
             }
         }*/
-        Move m = new Move(dx, dy, selectedShapes);
+        m.set(dx, dy, selectedShapes);
         m.execute();
     }
+
+    public Move getMove() { return m; }
 
     @Override
     public void deleteAllSelectedShapes() {

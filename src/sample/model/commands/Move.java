@@ -18,6 +18,12 @@ public class Move implements ICommand {
         this.shapes = s;
     }
 
+    public void set(double dx, double dy, ArrayList<Shape> s) {
+        this.dx = dx;
+        this.dy = dy;
+        this.shapes = s;
+    }
+
     @Override
     public void execute() {
         for (Shape s : shapes) {

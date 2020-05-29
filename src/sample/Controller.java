@@ -1,12 +1,10 @@
 package sample;
 
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.RadioButton;
-import javafx.scene.input.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
@@ -43,14 +41,6 @@ public class Controller implements Initializable {
         initRadioShapesListeners();
         initSelectMoveListener();
         initButtonsListeners();
-
-        final KeyCombination keyComb1 = new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN);
-        drawing.addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
-            System.out.println(keyEvent);
-            if (keyComb1.match(keyEvent)) {
-                System.out.println("Ctrl+Z pressed");
-            }
-        });
 
         colorPicker.setValue(Color.BLACK);
         ellipseRadio.fire(); // Select ellipse per default
@@ -176,5 +166,9 @@ public class Controller implements Initializable {
             }
             model.moveAllSelectedShapes(5, 5);
         });
+    }
+
+    protected static void manageCtrlZ() {
+
     }
 }
