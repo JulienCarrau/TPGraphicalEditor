@@ -119,7 +119,7 @@ public class Model implements IModel {
     }
 
     @Override
-    public boolean getMove() {
+    public boolean getSelectingMovingOption() {
         return moveOption;
     }
 

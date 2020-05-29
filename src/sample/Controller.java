@@ -50,7 +50,7 @@ public class Controller implements Initializable {
 
     private void initPaneListeners() {
         drawing.setOnMousePressed(mouseEvent -> {
-            if (!model.getMove()) // If we are on drawing option
+            if (!model.getSelectingMovingOption()) // If we are on drawing option
                 switch (model.getCurrentDrawingShape()) {
                     case "ellipse":
                         Ellipse e = new Ellipse(mouseEvent.getX(), mouseEvent.getY(), 1, 1);
@@ -81,7 +81,7 @@ public class Controller implements Initializable {
         });
 
         drawing.setOnMouseDragged(mouseEvent -> {
-            if (!model.getMove()) { // If we are on drawing option
+            if (!model.getSelectingMovingOption()) { // If we are on drawing option
                 drawing.getChildren().remove(model.getLastShape());
                 switch (model.getCurrentDrawingShape()) {
                     case "ellipse":
@@ -109,7 +109,7 @@ public class Controller implements Initializable {
     private void initColorPickerListener() {
         colorPicker.valueProperty().addListener((observableValue, color, t1) -> {
             model.setCurrentColor(t1);
-            if (model.getMove()) model.changeColorOfAllSelectedShapes();
+            if (model.getSelectingMovingOption()) model.changeColorOfAllSelectedShapes();
         });
     }
 
@@ -123,8 +123,8 @@ public class Controller implements Initializable {
 
     private void initSelectMoveListener() {
         selectMoveRadio.setOnAction(actionEvent -> {
-            model.setSelectingMovingOption(!model.getMove()); // Switch to move or draw
-            if (model.getMove()) {
+            model.setSelectingMovingOption(!model.getSelectingMovingOption()); // Switch to move or draw
+            if (model.getSelectingMovingOption()) {
                 deleteButton.setDisable(false);
                 cloneButton.setDisable(false);
             } else {

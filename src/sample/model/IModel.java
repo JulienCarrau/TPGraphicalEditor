@@ -17,7 +17,7 @@ public interface IModel {
     Shape getLastShape();
 
     void setSelectingMovingOption(boolean b);
-    boolean getMove();
+    boolean getSelectingMovingOption();
 
     void changeColorOfAllSelectedShapes();
     void moveAllSelectedShapes(double x, double y);
