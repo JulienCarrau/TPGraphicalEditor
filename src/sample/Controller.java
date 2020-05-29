@@ -43,12 +43,27 @@ public class Controller implements Initializable {
         initButtonsListeners();
         initUndoRedoListeners();
 
+        Rectangle r = new Rectangle(0, 0, 420, 400);
+        r.setFill(Color.RED);
+        drawing.setClip(r);
+
         colorPicker.setValue(Color.BLACK);
         ellipseRadio.fire(); // Select ellipse per default
         deleteButton.setDisable(true); // By default nothing is selected so this button is disabled
         cloneButton.setDisable(true); // By default nothing is selected so this button is disabled
     }
 
+    /**
+     * This method initializes listeners over the drawing pane. There is:
+     * - A mouse pressed listener which is used for:
+     *      1) If the model is on drawing mode: Create a new shape and draw the "first version" of it.
+     *      2) Else save first positions of mouse click in order to track translation.
+     *
+     * - A mouse dragged listener which is used for:
+     *      1) If the model is on drawing mode: Update the shape's size while drawing it.
+     *      2)
+     *
+     */
     private void initPaneListeners() {
         drawing.setOnMousePressed(mouseEvent -> {
             if (!model.getSelectingMovingOption()) // If we are on drawing option
