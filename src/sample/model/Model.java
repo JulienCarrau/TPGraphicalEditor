@@ -17,13 +17,12 @@ public class Model implements IModel {
     private String currentDrawingShape;
     private Color currentColor;
     private boolean moveOption; // if true, we only move shapes, else we can draw new ones
-    private Move m;
+    private Move move;
 
     public Model() {
         shapes = new ArrayList<>();
         selectedShapes = new ArrayList<>();
         moveOption = false;
-        m = new Move(0, 0, selectedShapes);
     }
 
     @Override
@@ -135,27 +134,13 @@ public class Model implements IModel {
 
     @Override
     public void moveAllSelectedShapes(double dx, double dy) {
-        /*for (Shape s : selectedShapes) {
-            if (s instanceof Ellipse) {
-                ((Ellipse) s).setCenterX(((Ellipse) s).getCenterX() + dx);
-                ((Ellipse) s).setCenterY(((Ellipse) s).getCenterY() + dy);
-            }
-            else if (s instanceof Rectangle) {
-                ((Rectangle) s).setX(((Rectangle) s).getX() + dx);
-                ((Rectangle) s).setY(((Rectangle) s).getY() + dy);
-            }
-            else {
-                ((Line) s).setStartX(((Line) s).getStartX() + dx);
-                ((Line) s).setEndX(((Line) s).getEndX() + dx);
-                ((Line) s).setStartY(((Line) s).getStartY() + dy);
-                ((Line) s).setEndY(((Line) s).getEndY() + dy);
-            }
-        }*/
-        m.set(dx, dy, selectedShapes);
-        m.execute();
+        move.setTranslation(dx, dy);
+        move.execute();
     }
 
-    public Move getMove() { return m; }
+    public void initMove() { move = new Move(0, 0, selectedShapes); }
+
+    public Move getMove() { return move; }
 
     @Override
     public void deleteAllSelectedShapes() {

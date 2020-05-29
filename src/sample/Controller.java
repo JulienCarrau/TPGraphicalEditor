@@ -28,7 +28,7 @@ public class Controller implements Initializable {
     private ColorPicker colorPicker;
 
     @FXML
-    private Button deleteButton, cloneButton;
+    private Button deleteButton, cloneButton, undoButton, redoButton;
 
     private double xMouseMemory, yMouseMemory;
 
@@ -41,6 +41,7 @@ public class Controller implements Initializable {
         initRadioShapesListeners();
         initSelectMoveListener();
         initButtonsListeners();
+        initUndoRedoListeners();
 
         colorPicker.setValue(Color.BLACK);
         ellipseRadio.fire(); // Select ellipse per default
@@ -75,6 +76,7 @@ public class Controller implements Initializable {
                         break;
                 }
             else { // To move shapes together we need to save old mouse positions
+                model.initMove();
                 xMouseMemory = mouseEvent.getX();
                 yMouseMemory = mouseEvent.getY();
             }
@@ -166,5 +168,11 @@ public class Controller implements Initializable {
             }
             model.moveAllSelectedShapes(5, 5);
         });
+    }
+
+    private void initUndoRedoListeners() {
+        undoButton.setOnAction(actionEvent -> model.getMove().undo());
+
+        redoButton.setOnAction(actionEvent -> model.getMove().redo());
     }
 }
