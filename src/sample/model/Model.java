@@ -4,20 +4,19 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 
 import java.util.ArrayList;
 
 public class Model implements IModel {
-    private ArrayList<Ellipse> ellipses;
-    private ArrayList<Rectangle> rectangles;
-    private ArrayList<Line> lines;
+    private ArrayList<Shape> shapes;
     private String currentSelectedShape;
     private Color currentColor;
+    private boolean moveOption; // if true, we only move shapes, else we can draw new ones
 
     public Model() {
-        lines = new ArrayList<>();
-        rectangles = new ArrayList<>();
-        ellipses = new ArrayList<>();
+        shapes = new ArrayList<>();
+        moveOption = false;
     }
 
     @Override
@@ -41,52 +40,51 @@ public class Model implements IModel {
     }
 
     @Override
-    public void addLine(Line l) {
-        lines.add(l);
+    public void addShape(Shape s) {
+        shapes.add(s);
+        s.setOnMouseClicked(mouseEvent -> {
+            if (moveOption) {
+                s.setStroke(Color.RED);
+            }
+        });
+    }
+
+    private void makeBigger(Shape s) {
+
     }
 
     @Override
-    public void updateLine(Line l, double endX, double endY) {
-        l.setEndX(endX);
-        l.setEndY(endY);
+    public void updateShape(Shape s, double endX, double endY) {
+        switch (currentSelectedShape) {
+            case "ellipse":
+                ((Ellipse) s).setRadiusX(endX);
+                ((Ellipse) s).setRadiusY(endY);
+                break;
+            case "rectangle":
+                if (endX > ((Rectangle) s).getX()) ((Rectangle) s).setWidth(Math.abs(((Rectangle) s).getX() - endX));
+                //else r.setX(Math.abs(r.getX() - endX));
+                if (endY > ((Rectangle) s).getY()) ((Rectangle) s).setHeight(Math.abs(((Rectangle) s).getY() - endY));
+                //else r.setY(Math.abs(r.getY() - endY));
+                break;
+            case "line":
+                ((Line) s).setEndX(endX);
+                ((Line) s).setEndY(endY);
+                break;
+        }
     }
 
     @Override
-    public Line getLastLine() {
-        return lines.get(lines.size() - 1);
+    public Shape getLastShape() {
+        return shapes.get(shapes.size() - 1);
     }
 
     @Override
-    public void addEllipse(Ellipse e) {
-        ellipses.add(e);
+    public void setMove(boolean b) {
+        moveOption = b;
     }
 
     @Override
-    public void updateEllipse(Ellipse e, double endX, double endY) {
-        e.setRadiusX(endX);
-        e.setRadiusY(endY);
-    }
-
-    @Override
-    public Ellipse getLastEllipse() {
-        return ellipses.get(ellipses.size() - 1);
-    }
-
-    @Override
-    public void addRectangle(Rectangle r) {
-        rectangles.add(r);
-    }
-
-    @Override
-    public void updateRectangle(Rectangle r, double endX, double endY) {
-        if (endX > r.getX()) r.setWidth(Math.abs(r.getX() - endX));
-        //else r.setX(Math.abs(r.getX() - endX));
-        if (endY > r.getY()) r.setHeight(Math.abs(r.getY() - endY));
-        //else r.setY(Math.abs(r.getY() - endY));
-    }
-
-    @Override
-    public Rectangle getLastRectangle() {
-        return rectangles.get(rectangles.size() - 1);
+    public boolean getMove() {
+        return moveOption;
     }
 }

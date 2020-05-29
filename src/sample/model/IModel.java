@@ -1,9 +1,7 @@
 package sample.model;
 
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Ellipse;
-import javafx.scene.shape.Line;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 
 public interface IModel {
     void setCurrentColor(Color c);
@@ -11,15 +9,10 @@ public interface IModel {
     void setCurrentShape(String s);
     String getCurrentShape();
 
-    void addLine(Line l);
-    void updateLine(Line l, double endX, double endY);
-    Line getLastLine();
+    void addShape(Shape s);
+    void updateShape(Shape s, double endX, double endY);
+    Shape getLastShape();
 
-    void addEllipse(Ellipse e);
-    void updateEllipse(Ellipse e, double endX, double endY);
-    Ellipse getLastEllipse();
-
-    void addRectangle(Rectangle r);
-    void updateRectangle(Rectangle r, double endX, double endY);
-    Rectangle getLastRectangle();
+    void setMove(boolean b);
+    boolean getMove();
 }
