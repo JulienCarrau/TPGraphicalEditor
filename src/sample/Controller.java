@@ -18,11 +18,11 @@ import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
     @FXML
-    private Pane drawing;
+    private Pane drawing; // Where we draw
     private Model model; // Will contain shapes
 
     @FXML
-    private RadioButton selectMoveRadio, ellipseRadio, rectangleRadio, lineRadio;
+    private RadioButton selectMoveRadio, ellipseRadio, rectangleRadio, lineRadio; // All radio buttons
 
     @FXML
     private ColorPicker colorPicker;
@@ -30,7 +30,7 @@ public class Controller implements Initializable {
     @FXML
     private Button deleteButton, cloneButton;
 
-    private double xMouseMemory, yMouseMemory;
+    private double xMouseMemory, yMouseMemory; // Used to translate a stack of shapes
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -42,9 +42,8 @@ public class Controller implements Initializable {
         initSelectMoveListener();
         initButtonsListeners();
 
-        Rectangle r = new Rectangle(0, 0, 420, 400);
-        r.setFill(Color.RED);
-        drawing.setClip(r);
+        Rectangle clip = new Rectangle(0, 0, 420, 400); // Cliping so drawings don't go outside of pane
+        drawing.setClip(clip);
 
         colorPicker.setValue(Color.BLACK);
         ellipseRadio.fire(); // Select ellipse per default
