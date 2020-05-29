@@ -1,19 +1,16 @@
 package sample;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Ellipse;
+import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
 import sample.model.Model;
 
 import java.net.URL;
@@ -21,10 +18,8 @@ import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
     @FXML
-    private Canvas drawing;
-    private GraphicsContext cg;
+    private Pane drawing;
     private Model model; // Will contain shapes
-    private double mouseStartX, mouseStartY;
 
     @FXML
     private RadioButton selectMoveRadio, ellipseRadio, rectangleRadio, lineRadio;
@@ -40,12 +35,9 @@ public class Controller implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        cg = drawing.getGraphicsContext2D(); // Initialize graphic context
-        cg.setLineWidth(3); // Set line width
-
         model = new Model();
 
-        initCanvasListeners();
+        initPaneListeners();
         initColorPickerListener();
         initRadioShapesListeners();
 
@@ -53,30 +45,60 @@ public class Controller implements Initializable {
         ellipseRadio.fire(); // Select ellipse per default
     }
 
-    private void initCanvasListeners() {
+    private void initPaneListeners() {
         drawing.setOnMousePressed(mouseEvent -> {
-            mouseStartX = mouseEvent.getX();
-            mouseStartY = mouseEvent.getY();
-            cg.setStroke(model.getCurrentColor());
-        });
-
-        drawing.setOnMouseReleased(mouseEvent -> {
             switch (model.getCurrentShape()) {
                 case "ellipse":
-
+                    Ellipse e = new Ellipse(mouseEvent.getX(), mouseEvent.getY(), 1, 1);
+                    e.setStroke(model.getCurrentColor());
+                    e.setFill(model.getCurrentColor());
+                    drawing.getChildren().add(e);
+                    model.addEllipse(e);
                     break;
                 case "rectangle":
-
+                    Rectangle r = new Rectangle(mouseEvent.getX(), mouseEvent.getY(), 1, 1);
+                    r.setStroke(model.getCurrentColor());
+                    r.setFill(model.getCurrentColor());
+                    drawing.getChildren().add(r);
+                    model.addRectangle(r);
                     break;
                 case "line":
-                    cg.strokeLine(mouseStartX, mouseStartY, mouseEvent.getX(), mouseEvent.getY());
+                    Line l = new Line(mouseEvent.getX(), mouseEvent.getY(), mouseEvent.getX(), mouseEvent.getY());
+                    l.setStroke(model.getCurrentColor());
+                    l.setFill(model.getCurrentColor());
+                    drawing.getChildren().add(l);
+                    model.addLine(l);
+                    break;
+            }
+        });
+
+        drawing.setOnMouseDragged(mouseEvent -> {
+            switch (model.getCurrentShape()) {
+                case "ellipse":
+                    drawing.getChildren().remove(model.getLastEllipse());
+                    Ellipse e = model.getLastEllipse();
+                    model.updateEllipse(e, Math.abs(e.getCenterX() - mouseEvent.getX()), Math.abs(e.getCenterY() - mouseEvent.getY()));
+                    drawing.getChildren().add(e);
+                    break;
+                case "rectangle":
+                    drawing.getChildren().remove(model.getLastRectangle());
+                    Rectangle r = model.getLastRectangle();
+                    model.updateRectangle(r, mouseEvent.getX(), mouseEvent.getY());
+                    drawing.getChildren().add(r);
+                    break;
+                case "line":
+                    drawing.getChildren().remove(model.getLastLine());
+                    model.updateLine(model.getLastLine(), mouseEvent.getX(), mouseEvent.getY());
+                    drawing.getChildren().add(model.getLastLine());
                     break;
             }
         });
     }
 
     private void initColorPickerListener() {
-        colorPicker.valueProperty().addListener((observableValue, color, t1) -> model.setCurrentColor(t1));
+        colorPicker.valueProperty().addListener((observableValue, color, t1) -> {
+            model.setCurrentColor(t1);
+        });
     }
 
     private void initRadioShapesListeners() {
