@@ -86,14 +86,14 @@ public class Controller implements Initializable {
                 switch (model.getCurrentDrawingShape()) {
                     case "ellipse":
                         Ellipse e = (Ellipse) model.getLastShape();
-                        model.changerSizeOfShapeInCreation(e, Math.abs(e.getCenterX() - mouseEvent.getX()), Math.abs(e.getCenterY() - mouseEvent.getY()));
+                        model.changeSizeOfShapeInCreation(e, Math.abs(e.getCenterX() - mouseEvent.getX()), Math.abs(e.getCenterY() - mouseEvent.getY()));
                         break;
                     case "rectangle":
                         Rectangle r = (Rectangle) model.getLastShape();
-                        model.changerSizeOfShapeInCreation(r, mouseEvent.getX(), mouseEvent.getY());
+                        model.changeSizeOfShapeInCreation(r, mouseEvent.getX(), mouseEvent.getY());
                         break;
                     case "line":
-                        model.changerSizeOfShapeInCreation(model.getLastShape(), mouseEvent.getX(), mouseEvent.getY());
+                        model.changeSizeOfShapeInCreation(model.getLastShape(), mouseEvent.getX(), mouseEvent.getY());
                         break;
                 }
                 drawing.getChildren().add(model.getLastShape());

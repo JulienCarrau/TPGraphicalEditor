@@ -12,7 +12,7 @@ public interface IModel {
     String getCurrentDrawingShape();
 
     void addShape(Shape s);
-    void changerSizeOfShapeInCreation(Shape s, double endX, double endY);
+    void changeSizeOfShapeInCreation(Shape s, double endX, double endY);
     ArrayList<Shape> getAllSelectedShapes();
     Shape getLastShape();
 
